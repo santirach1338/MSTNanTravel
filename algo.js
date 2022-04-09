@@ -12,7 +12,7 @@ class stp {
     }
 
     getDistance() {
-        
+
         let myObj = {a:1,b:2,c:3}
 
         let mySecObj = {...myObj,D:4,E:5,F:6}
@@ -31,6 +31,7 @@ class stp {
 
 
         console.log(mySecObj)
+        console.log("HEllo")
 
         // while (true){
 
