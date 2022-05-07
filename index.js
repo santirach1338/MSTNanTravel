@@ -14,15 +14,7 @@ app.get('/', (req, res) => {
     res.status(200).json({ msg: "Hello API" })
 })
 
-app.get("/api/test", (req, res) => {
-    const algo = new myApp("Korawit")
-    const algo2 = new myApp("Zaaz")
-    
-
-    console.log(algo.greeting()) 
-    console.log(algo2.getDistance()) 
-
-})
+app.get("/api/test", (req, res) => { })
 
 const pi = 3.1415
 
