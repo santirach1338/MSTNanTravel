@@ -1,51 +1,106 @@
+const direction = require('./Direction')
+
+const myAPIKey = "AIzaSyDt78c-QEji3m2PtBU8CEJ60euER-j4Nxk";
+
+const Direct = new direction(myAPIKey);
+
+
 class stp {
 
-    constructor(name) {
-        this.name = name;
+    currentlocation = {}
+    visited = []
+    TraveLingPath = []  //เก็บลำดับสถานที่ที่จะไปท่องเที่ยว
+    todoList = []
+
+    constructor() {
     }
 
+    async getpath(tripList, curLoc) {
 
-
-    greeting() {
-
-        return `Hello ${this.name} ! this is Shotest part algo.`
-    }
-
-    getDistance() {
-
-        let myObj = {a:1,b:2,c:3}
-
-        let mySecObj = {...myObj,D:4,E:5,F:6}
-
-
-        let firstArray = [2535,2536,2537]
-        let myArray = [...firstArray,2538,2539,2540]
-
-        myArray = myArray.map(x => (x - 543))
-        for (let i = 0; i < myArray.length; i++) {
-           
+        this.currentlocation = curLoc
+        
+        
+        let distance = []
+        
+        await this.getDistance(tripList, curLoc).then((data) => {
             
+            this.todoList = data
+            let place = this.minNode (data)
+            this.setVisited(place)
+            this.removeItem()
+            console.log(this.todoList)
 
-        }
+        })
 
 
+        for (let i = 0; i < tripList.length; i++) {
+            
+            for (let j = 0; j < this.todoList.length; j++) {
+                
 
-        console.log(mySecObj)
-        console.log("HEllo")
+                
+            }
 
-        // while (true){
+        } 
 
-        // }
 
-        // if ( 1 > 2){
-        //     // if True
-        // }else{
-        //     // if False
-        // }
+    }
+    
+    removeItem (index){
 
-        // return 300
+        this.todoList.splice(index,1)
+
     }
 
+    //รับค่า Node
+    setVisited (Node) {
+        this.visited.push(Node.nName)
+        this.currentlocation = Node.geo  //set ที่อยู่ปัจจุบัน 
+    }
+
+    //return สถานที่ที่ใกล้ที่สุด
+    minNode(Nodelist) {
+
+        let distance = Nodelist.map((x) => (x.distance))
+        let min = Math.min(...distance)
+        let index = distance.indexOf(min)
+
+        return Nodelist[index]
+    }
+
+    async getDistance(Nodelist, curLoc) {
+        console.log("getDistance")
+
+        let pathData = []
+        let isDone = false
+
+
+
+        for (let i = 0; i < Nodelist.length; i++) {
+            await Direct.getDistance(curLoc, Nodelist[i].geo).then((data) => {
+
+                let obj = { ...Nodelist[i], distance: data.value }
+                pathData.push(obj)
+
+                if (pathData.length == Nodelist.length) {
+                    // console.log(pathData)
+                    isDone = true
+                }
+
+                // console.log(obj)
+            })
+        }
+        return new Promise((resolve, reject) => {
+
+
+            if (isDone) {
+
+                console.log("resolve")
+                resolve(pathData)
+            }
+        })
+
+    }
 
 }
 

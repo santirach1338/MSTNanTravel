@@ -16,10 +16,11 @@ class Direction {
         let {data} = await axios.get(query)
         const {legs} = data.routes[0]
         const {distance} = legs[0]
-        return new Promise((resolve,reject) => {
-           
+
+        return new Promise((resolve,reject) => { 
             resolve(distance)
         })
+       
     }
 
 
