@@ -15,26 +15,24 @@ app.get('/', (req, res) => {
 })
 
 app.get("/api/test", (req, res) => { 
-    console.log("/api/test")
+ 
 
+    // ตัวอย่างข้อมูลสถานที่ //
     let listNode = [
         { nName : "Wat Phu min" ,geo :"18.774691818941534, 100.77159643605694" },
         { nName : "Wat Phra That Chang Kham Worawihan" ,geo :"18.776317086438006, 100.77197730974746" },
         { nName : "Wat Ming Muang" ,geo :"18.774844188447187, 100.76911141527825" },
         { nName : "Wat Sri Panton" ,geo :"18.776067448377397, 100.7657283881316" },
-        { nName : "Wat Hua Khuang" ,geo :"18.777504942320522, 100.77127846960148" }
+        { nName : "Wat Hua Khuang" ,geo :"18.777204395862995, 100.77110720641383" }
     ]
-    const current = "18.775626807983667, 100.77298697768647"
+    const current = "18.77519790559999, 100.77440202590455" //เริ่มที่ ส.ภ. น่าน
+    ///////////////////
 
     let STP = new Algo()
-    STP.getpath(listNode,current)
-
-    // STP.getDistance (listNode,current).then ((data) => {
-        
-    //     res.json (data)
-
-    // })
-    res.send ("OK")
+    STP.getpath(listNode,current).then((data) => {
+        res.status(200).json(data)
+    })
+    
     
 
 })

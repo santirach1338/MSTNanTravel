@@ -18,43 +18,50 @@ class stp {
     async getpath(tripList, curLoc) {
 
         this.currentlocation = curLoc
-        
-        
-        let distance = []
+
         
         await this.getDistance(tripList, curLoc).then((data) => {
             
             this.todoList = data
             let place = this.minNode (data)
             this.setVisited(place)
-            this.removeItem()
+            this.removeItem(place)
             console.log(this.todoList)
 
-        })
-
-
-        for (let i = 0; i < tripList.length; i++) {
             
-            for (let j = 0; j < this.todoList.length; j++) {
+        })
+        
+        for (let i = 0; i < tripList.length - 1; i++) {
+
+            await this.getDistance(this.todoList, this.currentlocation).then((data) => {
+            
+                this.todoList = data
+                let place = this.minNode (data)
+                this.setVisited(place)
+                this.removeItem(place)
+                // console.log(this.todoList)
                 
+            })
 
-                
-            }
-
-        } 
+        }
 
 
+        return new Promise((resolve,reject) =>{
+            resolve(this.TraveLingPath)
+        })
+        
     }
     
-    removeItem (index){
-
+    removeItem (place){
+        let index = this.todoList.indexOf(place)
         this.todoList.splice(index,1)
-
+        // console.log(index)
     }
 
     //รับค่า Node
     setVisited (Node) {
         this.visited.push(Node.nName)
+        this.TraveLingPath.push({nName:Node.nName,geo:Node.geo})
         this.currentlocation = Node.geo  //set ที่อยู่ปัจจุบัน 
     }
 
@@ -69,12 +76,9 @@ class stp {
     }
 
     async getDistance(Nodelist, curLoc) {
-        console.log("getDistance")
 
         let pathData = []
         let isDone = false
-
-
 
         for (let i = 0; i < Nodelist.length; i++) {
             await Direct.getDistance(curLoc, Nodelist[i].geo).then((data) => {
@@ -83,19 +87,14 @@ class stp {
                 pathData.push(obj)
 
                 if (pathData.length == Nodelist.length) {
-                    // console.log(pathData)
                     isDone = true
                 }
 
-                // console.log(obj)
             })
         }
         return new Promise((resolve, reject) => {
 
-
             if (isDone) {
-
-                console.log("resolve")
                 resolve(pathData)
             }
         })
