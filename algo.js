@@ -1,68 +1,66 @@
 const direction = require('./Direction')
-
-const myAPIKey = "AIzaSyDt78c-QEji3m2PtBU8CEJ60euER-j4Nxk";
-
+const cfg = require('./configs');
+const Direction = require('./Direction');
+const myAPIKey = cfg.API_KEY;
 const Direct = new direction(myAPIKey);
 
 
 class stp {
 
-    currentlocation = {}
+    currentlocation = ""
     visited = []
     TraveLingPath = []  //เก็บลำดับสถานที่ที่จะไปท่องเที่ยว
     todoList = []
+    distances = []
 
     constructor() {
     }
 
     async getpath(tripList, curLoc) {
 
+        // Initial //
         this.currentlocation = curLoc
-
-        
-        await this.getDistance(tripList, curLoc).then((data) => {
-            
+        await this.getDistance(tripList, this.currentlocation).then((data) => {
             this.todoList = data
-            let place = this.minNode (data)
+            let place = this.minNode(data)
             this.setVisited(place)
-            this.removeItem(place)
-            console.log(this.todoList)
 
-            
         })
-        
+
         for (let i = 0; i < tripList.length - 1; i++) {
 
+            // console.log(this.visited)
             await this.getDistance(this.todoList, this.currentlocation).then((data) => {
             
                 this.todoList = data
-                let place = this.minNode (data)
+                let place = this.minNode(data)
                 this.setVisited(place)
-                this.removeItem(place)
-                // console.log(this.todoList)
-                
+            
             })
 
         }
 
 
-        return new Promise((resolve,reject) =>{
-            resolve(this.TraveLingPath)
+        return new Promise((resolve, reject) => {
+            resolve({path:this.TraveLingPath,totalDistance:this.distances.reduce((partialSum, a) => partialSum + a, 0)})
         })
-        
+
     }
-    
-    removeItem (place){
+
+    removeItem(place) {
         let index = this.todoList.indexOf(place)
-        this.todoList.splice(index,1)
+        this.todoList.splice(index, 1)
         // console.log(index)
     }
 
     //รับค่า Node
-    setVisited (Node) {
+    setVisited(Node) {
+
         this.visited.push(Node.nName)
-        this.TraveLingPath.push({nName:Node.nName,geo:Node.geo})
+        this.TraveLingPath.push({ nName: Node.nName, geo: Node.geo })
         this.currentlocation = Node.geo  //set ที่อยู่ปัจจุบัน 
+        this.distances.push(Node.distance)
+        this.removeItem(Node) // ลบสภานที่ ที่ไปแล้วออกจาก List    
     }
 
     //return สถานที่ที่ใกล้ที่สุด
@@ -83,7 +81,7 @@ class stp {
         for (let i = 0; i < Nodelist.length; i++) {
             await Direct.getDistance(curLoc, Nodelist[i].geo).then((data) => {
 
-                let obj = { ...Nodelist[i], distance: data.value }
+                let obj = { nName:Nodelist[i].nName,geo:Nodelist[i].geo, distance: data.value }
                 pathData.push(obj)
 
                 if (pathData.length == Nodelist.length) {
@@ -95,9 +93,12 @@ class stp {
         return new Promise((resolve, reject) => {
 
             if (isDone) {
+                // console.log(pathData)
                 resolve(pathData)
             }
         })
+
+
 
     }
 
