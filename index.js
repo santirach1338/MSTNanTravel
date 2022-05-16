@@ -86,6 +86,6 @@ app.use('/api/shortestpath', (req, res) => {
 })
 
 app.listen(3080, () => {
-    console.log("Running on Port 3080 !")
-    console.log("http://localhost:3080")
+    console.log(`Running on Port ${config.listenPort} !`)
+    console.log(`http://localhost:${config.listenPort}`)
 })
