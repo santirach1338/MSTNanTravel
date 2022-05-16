@@ -14,7 +14,8 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.get('/', (req, res) => {
-    res.status(200).json({ msg: "Hello API" })
+    
+    res.status(200).json({ msg: "Hello API , By Santirach" })
 })
 
 // app.get("/api/test", (req, res) => {
@@ -85,7 +86,7 @@ app.use('/api/shortestpath', (req, res) => {
     console.log(req.method)
 })
 
-app.listen(3080, () => {
+app.listen(config.listenPort, () => {
     console.log(`Running on Port ${config.listenPort} !`)
     console.log(`http://localhost:${config.listenPort}`)
 })
