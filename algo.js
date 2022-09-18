@@ -5,7 +5,7 @@ const myAPIKey = cfg.API_KEY;
 const Direct = new direction(myAPIKey);
 
 
-class stp {
+class mst {
 
     currentlocation = ""
     visited = []
@@ -31,11 +31,11 @@ class stp {
 
             // console.log(this.visited)
             await this.getDistance(this.todoList, this.currentlocation).then((data) => {
-            
+
                 this.todoList = data
                 let place = this.minNode(data)
                 this.setVisited(place)
-            
+
             })
 
         }
@@ -43,8 +43,8 @@ class stp {
 
         return new Promise((resolve, reject) => {
             const obj = {
-                path:this.TraveLingPath,
-                totalDistance:this.distances.reduce((partialSum, a) => partialSum + a, 0)
+                path: this.TraveLingPath,
+                totalDistance: this.distances.reduce((partialSum, a) => partialSum + a, 0)
             }
 
             resolve(obj)
@@ -63,7 +63,7 @@ class stp {
 
         // console.log(Node)
         this.visited.push(Node.nName)
-        this.TraveLingPath.push({ nName: Node.nName, geo: Node.geo , distance:Node.distance})
+        this.TraveLingPath.push({ nName: Node.nName, geo: Node.geo, distance: Node.distance })
         this.currentlocation = Node.geo  //set ที่อยู่ปัจจุบัน 
         this.distances.push(Node.distance)
         this.removeItem(Node) // ลบสภานที่ ที่ไปแล้วออกจาก List    
@@ -87,7 +87,7 @@ class stp {
         for (let i = 0; i < Nodelist.length; i++) {
             await Direct.getDistance(curLoc, Nodelist[i].geo).then((data) => {
 
-                let obj = { nName:Nodelist[i].nName,geo:Nodelist[i].geo, distance: data.value }
+                let obj = { nName: Nodelist[i].nName, geo: Nodelist[i].geo, distance: data.value }
                 pathData.push(obj)
 
                 if (pathData.length == Nodelist.length) {
@@ -110,4 +110,4 @@ class stp {
 
 }
 
-module.exports = stp
+module.exports = mst

@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 //     })
 // })
 
-app.use('/api/shortestpath', (req, res) => {
+app.use('/api/mst', (req, res) => {
     if (req.method == "GET") {
         res.status(400).json({ statusCode: 400, text: "This API not allow method 'GET' " })
     }
